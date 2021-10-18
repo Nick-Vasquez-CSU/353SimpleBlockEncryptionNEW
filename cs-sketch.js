@@ -2,7 +2,7 @@
 // Time-stamp: <2021-09-28 16:54:18 Chuck Siska>
 
 // Make global g_canvas JS 'object': a key-value 'dictionary'.
-var g_canvas = { cell_size:10, wid:60, hgt:40 }; // JS Global var, w canvas size info.
+var g_canvas = { cell_size:10, wid:64, hgt:48 }; // JS Global var, w canvas size info.
 
 var g_frame_cnt = 0; // Setup a P5 display-frame counter, to do anim
 var g_frame_mod = 24; // Update ever 'mod' frames.
@@ -10,17 +10,6 @@ var g_stop = 0; // Go by default.
 var g_input; // My input box.
 var g_button; // Button for my input box.
 
-/*
-----Password----
-Password must be 8 characters long exactly
-Blocks are also 8 characters long and are separated by a single space on the grid
-Each character takes a spot on the grid
-
-----PlainTxt Message----
-Plaintext message must be 27 characters long, and message that is less than 27 will be padded with spaces. Cannot go over 27 characters
-Another character will be designated to tell how long the actual message is. Use the message length + 32 and input into ascii to get character value.
-Create plaintext blocks with digits based on their leading sequence (1-4). 
-*/
 
 function setup() // P5 Setup Fcn
 {
@@ -28,42 +17,140 @@ function setup() // P5 Setup Fcn
     let width = sz * g_canvas.wid;  // Our 'canvas' uses cells of given size, not 1x1 pixels.
     let height = sz * g_canvas.hgt;
     createCanvas( width, height );  // Make a P5 canvas.
-    draw_grid( 10, 50, 'white', 'yellow' );// (cellSize, vertGridLabel, Grid_line_color, vertGridLabel_color)
+    draw_grid( 10, 50, 'white', 'yellow' );
 
     // Setup input-box for input and a callback fcn when button is pressed.
     g_input_1 = createInput( ); // Create an input box, editable.
     g_input_1.position( 20, 30 ); // Put box on page.
-    g_button_1 = createButton( "Submit" ); // Create button to help get input data.
+    g_button_1 = createButton( "Submit Password" ); // Create button to help get input data.
     g_button_1.position( 160, 30 ); // Put button on page.
     g_button_1.mousePressed( retrieve_input_1 ); // Hook button press to callback fcn.
 
     //Setup for user password
     g_input_2 = createInput( ); // Create an input box, editable.
     g_input_2.position( 20, 60 ); // Put box on page.
-    g_button_2 = createButton( "Submit" ); // Create button to help get input data.
+    g_button_2 = createButton( "Submit Message" ); // Create button to help get input data.
     g_button_2.position( 160, 60 ); // Put button on page.
     g_button_2.mousePressed( retrieve_input_2 ); // Hook button press to callback fcn.
+
 }
 
 // Callback to get Input-box data.
 function retrieve_input_1()
 {
     var data = g_input_1.value(); // Get data from Input box.
-    console.log( "data = " + data ); // Show data in F12 Console output.
+    //Checking for Comprehensive8
+    var isValid = check_comp8(data);
+    if(isValid)
+    {
+        //do something
+        console.log( "Password meets Comprehensive8 requirements \nPassword = " + data ); // Show data in F12 Console output.
+    }
 }
 
 function retrieve_input_2()
 {
-    var data = g_input_2.value(); // Get data from Input box.
-    console.log( "data = " + data ); // Show data in F12 Console output.
+    var data = g_input_2.value()
+    console.log("Message = "+ data);
 }
+
+function check_comp8(value)
+{   
+    //Comprehensive8 checking requirements
+    var isLengthEight = false;
+    var hasDigit = false;
+    var hasOneUpperCase = false;
+    var hasOneLowerCase = false;
+    var hasSymbol = false;
+    
+    var user_data = value;
+
+    isLengthEight = check_isLengthEight(user_data);
+    hasDigit = check_hasDigit(user_data); //*Reminder* isNaN returns false when ONLY integers are entered i.e. '123456789'
+    hasOneUpperCase = check_hasOneUpperCase(user_data);
+    hasOneLowerCase = check_hasOneLowerCase(user_data);
+    hasSymbol = check_hasSymbol(user_data);
+        //console.log("hasDigit: " + hasDigit);
+        //console.log("hasOneUpperCase: " + hasOneUpperCase);
+        //console.log("hasOneLowerCase: " + hasOneLowerCase);
+        //console.log("hasSymbol: " + hasSymbol);
+    if(isLengthEight && hasDigit && hasOneUpperCase && hasOneLowerCase && hasSymbol)
+    {
+        //console.log("Password meets Comp8 requirements: " + user_data);
+        return true;
+    }
+    else
+    {
+        console.log("Password doesn't meet Comp8 requirements: " + user_data);
+        return false;
+    }
+
+}
+
+function check_isLengthEight(user_data)
+{
+    if(user_data.length == 8)
+    {
+        //console.log("Password has a length of 8: " + user_data);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+function check_hasDigit(user_data)
+{
+    var hasNum = /\d/;
+    return hasNum.test(user_data)
+}
+
+function check_hasOneUpperCase(user_data)
+{
+    for(var i = 0; i < user_data.length; i++)
+    {
+        if(!isNaN(user_data[0]))//Check if the character is a number first. To prevent compile issues with '.toUpperCase()'
+        {
+            //console.log("This character " + user_data[0] + " is a number!")
+        }
+        else(user_data[0] == user_data[0].toUpperCase())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+function check_hasOneLowerCase(user_data)
+{
+    for(var i = 0; i < user_data.length; i++)
+    {
+        if(!isNaN(user_data[0]))//Check if the character is a number first. To prevent compile issues with '.toLowerCase()'
+        {
+            //console.log("This character " + user_data[0] + " is a number!")
+        }
+        else(user_data[0] == user_data[0].toLowerCase())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+function check_hasSymbol(user_data)
+{
+    var symbolCheck = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    return symbolCheck.test(user_data);
+}
+
 
 // Globals to keep track of Bot
 var g_bot = { dir:3, x:20, y:20, color:100 }; // Dir is 0..7 clock, w 0 up.
 var g_box = { t:1, hgt:47, l:1, wid:63 }; // Box in which bot can move.
 
 // Move the Bot at random, to a neighboring cell, changing Bot's painting color.
-/*function move_bot( )
+function move_bot( )
 {
     let dir = (round (8 * random( ))) // Change direction at random; brownian motion.
     let dx = 0;
@@ -89,10 +176,9 @@ var g_box = { t:1, hgt:47, l:1, wid:63 }; // Box in which bot can move.
     g_bot.color = color;
     //console.log( "bot x,y,dir,clr = " + x + "," + y + "," + dir + "," +  color );
 }
-*/
 
 // Convert Bot pos to grid pos & draw Bot's color "presence".
-/*function draw_bot( ) 
+function draw_bot( ) 
 {
     let sz = g_canvas.cell_size;
     let sz2 = sz / 2;
@@ -113,7 +199,7 @@ var g_box = { t:1, hgt:47, l:1, wid:63 }; // Box in which bot can move.
     // Paint the cell.
     rect( x, y, big, big );
 }
-*/
+
 // Update our display -- Move and draw Bot.
 function draw_update()  
 {
