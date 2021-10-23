@@ -42,6 +42,7 @@ function retrieve_input() {
   // Testing input
   if (isValidPlaintext(data_1)) {
     console.log("Plaintext = " + data_1); // Show data in F12 Console output.
+    plaintextSplitter(data_1);
   } else {
     console.error("Invalid Plaintext");
   }
@@ -198,4 +199,22 @@ function isValidPlaintext(str) {
 function isValidPassword(str) {
   let re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,8}$/;
   return re.test(str);
+}
+
+function plaintextSplitter(str) {
+  var arrStr = [];
+  var length = str.length;
+  var start = 0;
+  var end = 7;
+  while (length > 0) {
+    let substr = str.slice(start, end);
+    arrStr.push(substr);
+    start = end;
+    end += 7;
+    if (end > length) {
+      length = length - end;
+      end = length;
+    }
+  }
+  console.log(arrStr);
 }
