@@ -45,11 +45,13 @@ function retrieve_input() {
     plaintextSplitter(data_1);
   } else {
     console.error("Invalid Plaintext");
+    alert("Invalid Plaintext");
   }
   if (isValidPassword(data_2)) {
     console.log("Password = " + data_2); // Show data in F12 Console output.
   } else {
     console.error("Invalid Password");
+    alert("Invalid Password");
   }
 }
 
