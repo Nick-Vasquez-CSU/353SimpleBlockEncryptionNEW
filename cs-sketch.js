@@ -210,11 +210,11 @@ function plaintextSplitter(str) {
     let substr = str.slice(start, end);
     arrStr.push(substr);
     start = end;
-    end += 7;
     if (end > length) {
       length = length - end;
       end = length;
     }
+    end += 7;
   }
   console.log(arrStr);
 }
