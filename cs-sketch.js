@@ -19,19 +19,34 @@ function setup() {
   draw_grid(10, 50, "white", "yellow");
 
   // Setup input-box for input and a callback fcn when button is pressed.
+  greeting_1 = createElement("h4", "Plaintext");
+  greeting_1.position(10, 10);
   g_input_1 = createInput(); // Create an input box, editable.
-  g_input_1.position(20, 30); // Put box on page.
-  g_button_1 = createButton("Submit"); // Create button to help get input data.
-  g_button_1.position(160, 30); // Put button on page.
-  g_button_1.mousePressed(retrieve_input_1); // Hook button press to callback fcn.
+  g_input_1.position(90, 30); // Put box on page.
+
+  // Setup input-box for input and a callback fcn when button is pressed.
+  greeting_2 = createElement("h4", "Password");
+  greeting_2.position(10, 40);
+  g_input_2 = createInput(); // Create an input box, editable.
+  g_input_2.position(90, 60); // Put box on page.
+
+  g_button = createButton("Submit"); // Create button to help get input data.
+  g_button.position(140, 90); // Put button on page.
+  g_button.mousePressed(retrieve_input); // Hook button press to callback fcn.
 }
 
 // Callback to get Input-box data.
-function retrieve_input_1() {
-  var data = g_input_1.value(); // Get data from Input box.
+function retrieve_input() {
+  var data_1 = g_input_1.value(); // Get data from Input box.
+  var data_2 = g_input_2.value(); // Get data from Input box.
   // Testing input
-  if (isValidPassword(data)) {
-    console.log("data = " + data); // Show data in F12 Console output.
+  if (isValidPlaintext(data_1)) {
+    console.log("Plaintext = " + data_1); // Show data in F12 Console output.
+  } else {
+    console.error("Invalid Plaintext");
+  }
+  if (isValidPassword(data_2)) {
+    console.log("Password = " + data_2); // Show data in F12 Console output.
   } else {
     console.error("Invalid Password");
   }
@@ -167,7 +182,19 @@ function mousePressed() {
   draw_bot();
 }
 
-// Fixed 8 letter password, with at least a symbol, upper, lower case letters, and a number
+// Fixed 27 character printable plaintext
+function isValidPlaintext(str) {
+  if (str.length > 27) {
+    // console.error(str.length);
+    return false;
+  } else {
+    let re = /^[a-z0-9!"#$%&'()*+,.\/:;<=>?@\[\] ^_`{|}~-]*$/i;
+    // console.log(str.length);
+    return re.test(str);
+  }
+}
+
+// Fixed 8 character password, with at least a symbol, upper, lower case letters, and a number
 function isValidPassword(str) {
   let re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,8}$/;
   return re.test(str);
