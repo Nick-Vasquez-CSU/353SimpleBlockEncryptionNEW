@@ -40,8 +40,8 @@ function retrieve_input_1()
 {
     var data = g_input_1.value(); // Get data from Input box.
     //Checking for Comprehensive8
-    var isValid = check_comp8(data);
-    if(isValid)
+    var isPasswordValid = check_comp8(data);
+    if(isPasswordValid)
     {
         //do something
         console.log( "Password meets Comprehensive8 requirements \nPassword = " + data ); // Show data in F12 Console output.
@@ -51,7 +51,14 @@ function retrieve_input_1()
 function retrieve_input_2()
 {
     var data = g_input_2.value()
-    console.log("Message = "+ data);
+    //Checking for Plaintext > 27 Characters
+    var isPlaintxtValid = check_plaintxt(data);
+    if(isPlaintxtValid)
+    {
+        //do something
+        console.log("Plaintext meets the requirements \nPlaintext = " + data);
+    }
+
 }
 
 function check_comp8(value)
@@ -85,6 +92,35 @@ function check_comp8(value)
         return false;
     }
 
+}
+
+function check_plaintxt(value)
+{
+    var isLengthValid = check_isLengthValid(value);
+
+    if(isLengthValid)
+    {
+        //console.log("Plaintext meets requirements: " + value);
+        return true;
+    }
+    else
+    {
+        //console.log("Plaintext doesn't meet requirements, must be less than or equal to  27 chars: " + value);
+        return false;
+    }
+
+}
+
+function check_isLengthValid(user_data)
+{
+    if(user_data.length > 27)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 function check_isLengthEight(user_data)
