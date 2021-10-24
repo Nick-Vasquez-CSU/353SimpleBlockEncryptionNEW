@@ -2,7 +2,7 @@
 // Time-stamp: <2021-09-28 16:54:18 Chuck Siska>
 
 // Make global g_canvas JS 'object': a key-value 'dictionary'.
-var g_canvas = { cell_size: 10, wid: 64, hgt: 8 }; // JS Global var, w canvas size info.
+var g_canvas = { cell_size: 10, wid: 64, hgt: 4 }; // JS Global var, w canvas size info.
 
 // var g_frame_cnt = 0; // Setup a P5 display-frame counter, to do anim
 // var g_frame_mod = 24; // Update ever 'mod' frames.
@@ -16,7 +16,7 @@ function setup() {
   let width = sz * g_canvas.wid; // Our 'canvas' uses cells of given size, not 1x1 pixels.
   let height = sz * g_canvas.hgt;
   createCanvas(width, height); // Make a P5 canvas.
-  draw_grid(40, 80, "white", "yellow");
+  draw_grid(20, 20, "white", "yellow");
 
   // Setup input-box for input and a callback fcn when button is pressed.
   greeting_1 = createElement("h4", "Plaintext");
@@ -206,11 +206,12 @@ function isValidPassword(str) {
 function plaintextSplitter(str) {
   var arrStr = [];
   var fullStr = str.padEnd(28);
+  console.log(fullStr);
   var start = 0;
   var end = 7;
-  var counter = 0;
-  while (counter < 4) {
-    let substr = fullStr.slice(start, end);
+  var counter = 1;
+  while (counter < 5) {
+    let substr = counter + fullStr.slice(start, end);
     arrStr.push(substr);
     start = end;
     end += 7;
