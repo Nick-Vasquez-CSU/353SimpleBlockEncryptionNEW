@@ -41,7 +41,7 @@ function retrieve_input() {
   var data_2 = g_input_2.value(); // Get data from Input box.
   // Testing input
   if (isValidPlaintext(data_1)) {
-    console.log("Plaintext = " + data_1); // Show data in F12 Console output.
+    console.log("Plaintext: " + '"' + data_1 + '"'); // Show data in F12 Console output.
     plaintextSplitter(data_1);
   } else {
     console.error("Invalid Plaintext");
@@ -206,7 +206,6 @@ function isValidPassword(str) {
 function plaintextSplitter(str) {
   var arrStr = [];
   var fullStr = str.padEnd(28);
-  console.log(fullStr);
   var start = 0;
   var end = 7;
   var counter = 1;
@@ -217,5 +216,14 @@ function plaintextSplitter(str) {
     end += 7;
     counter++;
   }
-  console.log(arrStr);
+  console.log("arrStr: ", arrStr);
+  drawText(arrStr);
+}
+
+function drawText(arr) {
+  var joinedStr = arr.join("");
+  for (let i = 0; i < joinedStr.length; i++) {
+    text(joinedStr[i], 6 + i * 20, 14);
+    console.log(i + 1 + ":", joinedStr[i]);
+  }
 }
