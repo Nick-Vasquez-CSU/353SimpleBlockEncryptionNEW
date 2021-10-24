@@ -1,8 +1,11 @@
 // cs-sketch.js; P5 key animation & input fcns.  // CF p5js.org/reference
-// Time-stamp: <2021-09-28 16:54:18 Chuck Siska>
+/*
+    Team Name:
+        
+*/
 
 // Make global g_canvas JS 'object': a key-value 'dictionary'.
-var g_canvas = { cell_size:10, wid:64, hgt:48 }; // JS Global var, w canvas size info.
+var g_canvas = { cell_size:20, wid:40, hgt:2.5 }; // JS Global var, w canvas size info.
 
 var g_frame_cnt = 0; // Setup a P5 display-frame counter, to do anim
 var g_frame_mod = 24; // Update ever 'mod' frames.
@@ -17,7 +20,7 @@ function setup() // P5 Setup Fcn
     let width = sz * g_canvas.wid;  // Our 'canvas' uses cells of given size, not 1x1 pixels.
     let height = sz * g_canvas.hgt;
     createCanvas( width, height );  // Make a P5 canvas.
-    draw_grid( 10, 50, 'white', 'yellow' );
+    draw_grid( 25, 8, 'white', 'yellow' );
 
     // Setup input-box for input and a callback fcn when button is pressed.
     g_input_1 = createInput( ); // Create an input box, editable.
@@ -35,6 +38,8 @@ function setup() // P5 Setup Fcn
 
 }
 
+
+//---------------------------------------------------Getting User Input---------------------------------------------------
 // Callback to get Input-box data.
 function retrieve_input_1()
 {
@@ -57,10 +62,17 @@ function retrieve_input_2()
     {
         //do something
         console.log("Plaintext meets the requirements \nPlaintext = " + data);
+        //separate the plaintext into 4 blocks
+
+        //display plaintext to grid
+        displayText(data);
     }
 
 }
+//------------------------------------------------------------------------------------------------------------------------
 
+
+//---------------------------------------------------Checking User Input---------------------------------------------------
 function check_comp8(value)
 {   
     //Comprehensive8 checking requirements
@@ -180,105 +192,65 @@ function check_hasSymbol(user_data)
     return symbolCheck.test(user_data);
 }
 
+//Encryption Algorithm
 
-// Globals to keep track of Bot
-var g_bot = { dir:3, x:20, y:20, color:100 }; // Dir is 0..7 clock, w 0 up.
-var g_box = { t:1, hgt:47, l:1, wid:63 }; // Box in which bot can move.
+function encryptStart(pMessage, password){
+    
+    let msgIndex = 0;
+    let loopLimit = 0;
+    let newString = "";
 
-// Move the Bot at random, to a neighboring cell, changing Bot's painting color.
-function move_bot( )
-{
-    let dir = (round (8 * random( ))) // Change direction at random; brownian motion.
-    let dx = 0;
-    let dy = 0;
-    switch (dir)  // Convert dir to x,y deltas: dir = clock w 0=Up,2=Rt,4=Dn,6=Left.
-    {
-      case 0 : {         dy = -1; break; }
-      case 1 : { dx = 1; dy = -1; break; }
-      case 2 : { dx = 1; break; }
-      case 3 : { dx = 1; dy = 1; break; }
-      case 4 : {         dy = 1; break; }
-      case 5 : { dx = -1; dy = 1; break; }
-      case 6 : { dx = -1; break; }
-      case 7 : { dx = -1; dy = -1; break; }
-      }
-    let x = (dx + g_bot.x + g_box.wid) % g_box.wid; // Move-x.  Ensure positive b4 mod.
-    let y = (dy + g_bot.y + g_box.hgt) % g_box.hgt; // Ditto y.
-    // Now change color of the Bot's new cell.
-    let color =  100 + (1 + g_bot.color) % 156; // Incr color in nice range.
-    g_bot.x = x; // Update bot x.
-    g_bot.y = y;
-    g_bot.dir = dir;
-    g_bot.color = color;
-    //console.log( "bot x,y,dir,clr = " + x + "," + y + "," + dir + "," +  color );
-}
-
-// Convert Bot pos to grid pos & draw Bot's color "presence".
-function draw_bot( ) 
-{
-    let sz = g_canvas.cell_size;
-    let sz2 = sz / 2;
-    let x = 1+ g_bot.x*sz; // Set x one pixel inside the sz-by-sz cell.
-    let y = 1+ g_bot.y*sz;
-    let big = sz -2; // Stay inside cell walls.
-    // Fill 'color': its a keystring, or a hexstring like "#5F", etc.  See P5 docs.
-    fill( "#" + g_bot.color ); // Concat string, auto-convert the number to string.
-    //console.log( "x,y,big = " + x + "," + y + "," + big );
-    let acolors = get( x + sz2, y + sz2 ); // Get cell interior pixel color [RGBA] array.
-    let pix = acolors[ 0 ] + acolors[ 1 ] + acolors[ 2 ];
-    //console.log( "acolors,pix = " + acolors + ", " + pix );
-
-    // (*) Here is how to detect what's at the pixel location.  See P5 docs for fancier...
-    if (0 != pix) { fill( 0 ); stroke( 0 ); } // Turn off color of prior bot-visited cell.
-    else { stroke( 'white' ); } // Else Bot visiting this cell, so color it.
-
-    // Paint the cell.
-    rect( x, y, big, big );
-}
-
-// Update our display -- Move and draw Bot.
-function draw_update()  
-{
-    //console.log( "g_frame_cnt = " + g_frame_cnt );
-    move_bot( );
-    draw_bot( );
-}
-
-// P5 Frame Re-draw Fcn, Called for Every Frame.
-function draw()  
-{
-    ++g_frame_cnt; // Track frame count.
-    if (0 == g_frame_cnt % g_frame_mod)  // Every so often, do stuff.
-    {
-        if (!g_stop) draw_update(); // If Bot not "stopped", update Bot.
+    for (var p of password){
+        while (loopLimit < 4){
+            newString = newString.concat(encryptProcess(pMessage[msgIndex], p));
+            msgIndex++;
+            loopLimit++;
+        }
+        loopLimit = 0;
     }
+    return newString;
 }
 
-// If Key is Pressed, toggle Bot's global stop var.
-function keyPressed( )
-{
-    g_stop = ! g_stop;
+function encryptProcess(msgChar, pswdChar){
+    
+    let ax = msgChar;
+    let px = pswdChar;
+
+    ax = ax.charCodeAt(0) - 32;
+    px = px.charCodeAt(0) - 32;
+
+    let bx = (ax ^ px);
+
+    let cx = bx + 32;
+
+    return String.fromCharCode(cx);
+
 }
 
-// If Mouse is Pressed, relocate Bot to Mouse on a cell, wrapped onto grid if needed.
-//   and gratuitously draw the bot at new loc.
-function mousePressed( )
+
+//Nathan's code
+
+
+
+//
+
+//------------------------------------------------------------------------------------------------------------------------
+
+
+//---------------------------------------------------Displaying to Grid---------------------------------------------------
+function displayText(user_plaintxt)
 {
-    let x = mouseX; // Get mouse's current loc (from its global).
-    let y = mouseY;
-    //console.log( "mouse x,y = " + x + "," + y );
-    // Get grid cell corresponding to mouse XY, storing cell XY into Bot.
-    let sz = g_canvas.cell_size;
-    let gridx = round( (x-0.5) / sz );
-    let gridy = round( (y-0.5) / sz );
-    //console.log( "grid x,y = " + gridx + "," + gridy );
-    //console.log( "box wid,hgt = " + g_box.wid + "," + g_box.hgt );
-    g_bot.x = gridx + g_box.wid; // Ensure its positive.
-    //console.log( "bot x = " + g_bot.x );
-    g_bot.x %= g_box.wid; // Wrap to fit box.
-    g_bot.y = gridy + g_box.hgt;
-    //console.log( "bot y = " + g_bot.y );
-    g_bot.y %= g_box.hgt;
-    //console.log( "bot x,y = " + g_bot.x + "," + g_bot.y );
-    draw_bot( );
+    clear();
+    setup();
+    noStroke();
+    fill('rgb(0,255,0)');  //Fill color of text
+    textSize(15);
+    //clear out grid before printing
+    
+    for (character in user_plaintxt)//displays character into respective cell
+    { 
+        text(user_plaintxt[character], (8+(character*25)), 20);
+    }
+
 }
+//------------------------------------------------------------------------------------------------------------------------
