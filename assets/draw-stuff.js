@@ -1,10 +1,14 @@
-// Draw stuff, with P5  // CF p5js.org/reference
-// Time-stamp: <2020-02-02 14:46:00 Chuck Siska>
-// ------------------------------------------------------------
 
-// =====================================================  draw_grid ====
-// Draw a fancy grid with major & minor lines 
-// & major row/col numbers.
+/*
+    Team Name: 3NB
+        Nicolas Vasquez : nickvas67@csu.fullerton.edu
+        Nathan Vu       : mr.nathanvu@csu.fullerton.edu
+        Bryant Nguyen   : bryantdnguyen@csu.fullerton.edu
+        Nicholas Jones  : nicholasj898@csu.fullerton.edu
+
+    Provides a framework for the grid that displays the plaintext message and the encrypted message
+*/
+
 function draw_grid( rminor, rmajor, rstroke, rfill  ) 
 {
     stroke( rstroke );
@@ -20,7 +24,7 @@ function draw_grid( rminor, rmajor, rstroke, rfill  )
         strokeWeight( line_wgt );
         line( ix, 0, ix, height );
         strokeWeight( 1 );
-        if ( ix % rmajor == 0 ) { text( ix, ix, 10 ); }
+        //if ( ix % rmajor == 0 ) { text( ix, ix, 10 ); }
     }
     for ( var iy = 0; iy < height; iy += rminor )
     {
@@ -30,6 +34,6 @@ function draw_grid( rminor, rmajor, rstroke, rfill  )
         strokeWeight( line_wgt );
         line( 0, iy, width, iy );
         strokeWeight( 1 );
-        if ( iy % rmajor == 0 ) { text( iy, 0, iy + 10 ); }
+        //if ( iy % rmajor == 0 ) { text( iy, 0, iy + 10 ); }
     }
 }

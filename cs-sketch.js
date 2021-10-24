@@ -1,7 +1,13 @@
 // cs-sketch.js; P5 key animation & input fcns.  // CF p5js.org/reference
 /*
-    Team Name:
+    Team Name: 3NB
+        Nicolas Vasquez : nickvas67@csu.fullerton.edu
+        Nathan Vu       : mr.nathanvu@csu.fullerton.edu
+        Bryant Nguyen   : bryantdnguyen@csu.fullerton.edu
+        Nicholas Jones  : nicholasj898@csu.fullerton.edu
         
+    Takes two inputs for plaintext and password and encrypts them with the result
+    being displayed on the website
 */
 
 // Make global g_canvas JS 'object': a key-value 'dictionary'.
@@ -23,52 +29,83 @@ function setup() // P5 Setup Fcn
     draw_grid( 25, 8, 'white', 'yellow' );
 
     // Setup input-box for input and a callback fcn when button is pressed.
-    g_input_1 = createInput( ); // Create an input box, editable.
-    g_input_1.position( 20, 30 ); // Put box on page.
-    g_button_1 = createButton( "Submit Password" ); // Create button to help get input data.
-    g_button_1.position( 160, 30 ); // Put button on page.
-    g_button_1.mousePressed( retrieve_input_1 ); // Hook button press to callback fcn.
+    greeting_1 = createElement("h4", "Plaintext");
+    greeting_1.position(10, 10);
+    g_input_1 = createInput(); // Create an input box, editable.
+    g_input_1.position(90, 30); // Put box on page.
 
-    //Setup for user password
-    g_input_2 = createInput( ); // Create an input box, editable.
-    g_input_2.position( 20, 60 ); // Put box on page.
-    g_button_2 = createButton( "Submit Message" ); // Create button to help get input data.
-    g_button_2.position( 160, 60 ); // Put button on page.
-    g_button_2.mousePressed( retrieve_input_2 ); // Hook button press to callback fcn.
+    // Setup input-box for input and a callback fcn when button is pressed.
+    greeting_2 = createElement("h4", "Password");
+    greeting_2.position(10, 40);
+    g_input_2 = createInput(); // Create an input box, editable.
+    g_input_2.position(90, 60); // Put box on page.
+
+    g_button = createButton("Submit"); // Create button to help get input data.
+    g_button.position(140, 90); // Put button on page.
+    g_button.mousePressed(retrieve_input_1); // Hook button press to callback fcn.
 
 }
 
 
 //---------------------------------------------------Getting User Input---------------------------------------------------
 // Callback to get Input-box data.
+
+/*
 function retrieve_input_1()
 {
-    var data = g_input_1.value(); // Get data from Input box.
-    //Checking for Comprehensive8
-    var isPasswordValid = check_comp8(data);
-    if(isPasswordValid)
-    {
-        //do something
-        console.log( "Password meets Comprehensive8 requirements \nPassword = " + data ); // Show data in F12 Console output.
+    var data_1 = g_input_1.value(); // Get data from Input box.
+    var data_2 = g_input_2.value(); // Get data from Input box.
+    var arrayG = [];
+    // Testing input
+    if (check_plaintxt(data_1)) {
+        console.log("Plaintext = " + data_1); // Show data in F12 Console output.
+        
+        //data_1 = plaintxt_pad(data_1);
+        arrayG = plaintextSplitter(data_1);
+        data_1 = drawText(arrayG);
+        displayText(data_1);
+        
+    } else {
+        console.error("Invalid Plaintext");
+        alert("Invalid Plaintext");
     }
-}
-
-function retrieve_input_2()
-{
-    var data = g_input_2.value()
-    //Checking for Plaintext > 27 Characters
-    var isPlaintxtValid = check_plaintxt(data);
-    if(isPlaintxtValid)
-    {
-        //do something
-        console.log("Plaintext meets the requirements \nPlaintext = " + data);
-        //separate the plaintext into 4 blocks
-
-        //display plaintext to grid
-        displayText(data);
+    if (check_comp8(data_2)) {
+        console.log("Password = " + data_2); // Show data in F12 Console output.
+    } else {
+        console.error("Invalid Password");
+        alert("Invalid Password");
     }
+    //Start Encryption 
+    var encryptedMsg = encryptStart(data_1, data_2);
+    displayCypher(encryptedMsg);
 
-}
+}*/
+
+function retrieve_input_1() {
+    var data_1 = g_input_1.value(); // Get data from Input box.
+    var data_2 = g_input_2.value(); // Get data from Input box.
+    // Testing input 
+    var isValidPassword = check_comp8(data_2);
+    if (isValidPlaintext(data_1) && isValidPassword) {
+      console.log("Plaintext: " + '"' + data_1 + '"'); // Show data in F12 Console output.
+      console.log("Password = " + '"' + data_2 + '"'); // Show data in F12 Console output.
+      plaintextSplitter(data_1, data_2);
+      //data_1 = drawText(arrayG);
+      //displayText(data_1);
+      //var encryptedMsg = encryptStart(data_1, data_2);
+      //displayCypher(encryptedMsg);
+    } else {
+      if (!isValidPlaintext(data_1)) {
+        console.error("Invalid Plaintext");
+        // alert("Invalid Plaintext");
+      }
+      if (!isValidPassword) {
+        console.error("Invalid Password");
+        // alert("Invalid Password");
+      }
+    }
+} 
+
 //------------------------------------------------------------------------------------------------------------------------
 
 
@@ -192,7 +229,20 @@ function check_hasSymbol(user_data)
     return symbolCheck.test(user_data);
 }
 
-//Encryption Algorithm
+function isValidPlaintext(str) {
+    if (str.length < 1 || str.length > 27) {
+      // console.error(str.length);
+      return false;
+    } else {
+      let re = /^[a-z0-9!"#$%&'()*+,.\/:;<=>?@\[\] ^_`{|}~-]*$/i;
+      // console.log(str.length);
+      return re.test(str);
+    }
+  }
+//------------------------------------------------------------------------------------------------------------------------
+
+//---------------------------------------------------Encryption Algorithm---------------------------------------------------
+
 
 function encryptStart(pMessage, password){
     
@@ -202,17 +252,19 @@ function encryptStart(pMessage, password){
 
     for (var p of password){
         while (loopLimit < 4){
-            newString = newString.concat(encryptProcess(pMessage[msgIndex], p));
+            newString += encryptProcess(pMessage[msgIndex], p);
+            //newString = newString.concat(encryptProcess(pMessage[msgIndex], p));
             msgIndex++;
             loopLimit++;
         }
+        //msgIndex = 0;
         loopLimit = 0;
     }
     return newString;
 }
 
 function encryptProcess(msgChar, pswdChar){
-    
+    console.log("Message Char = " + msgChar);
     let ax = msgChar;
     let px = pswdChar;
 
@@ -227,11 +279,49 @@ function encryptProcess(msgChar, pswdChar){
 
 }
 
-
 //Nathan's code
 
+function plaintextSplitter(str, password) {
+    var arrStr = [];
+    var fullStr = str.padEnd(28);
+    console.log(fullStr);
+    var start = 0;
+    var end = 7;
+    var counter = 1;
+    while (counter < 5) {
+      let substr = counter + fullStr.slice(start, end);
+      arrStr.push(substr);
+      start = end;
+      end += 7;
+      counter++;
+    }
+    console.log(arrStr);
+    var joinedStr = arrStr.join("");
+    var cyphertext = encryptStart(joinedStr, password);
+    var oriStrLen = str.length;
+    drawText(joinedStr, cyphertext, oriStrLen);
+  }
 
+  function drawText(plaintext, cyphertext, oriStrLen) {
+    clear();
+    setup();
+    noStroke();
+    fill('rgb(0,255,0)');  //Fill color of text
+    textSize(15);
 
+    console.log("oriStrLen", oriStrLen);
+    var zx = String.fromCharCode(oriStrLen + 32);
+  
+    for (let i = 0; i < cyphertext.length - 1; i++) {
+      text(plaintext[i], (8 + (i * 25)), 20);
+      text(cyphertext[i], (8 + (i * 25)), 42);
+      // console.log(i + 1 + ":", joinedStr[i]);
+    }
+  
+    text(zx, 8 + 31 * 25, 20);
+    text(cyphertext[31], 8 + 31 * 25, 42);
+  }
+  
 //
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -240,12 +330,11 @@ function encryptProcess(msgChar, pswdChar){
 //---------------------------------------------------Displaying to Grid---------------------------------------------------
 function displayText(user_plaintxt)
 {
-    clear();
+    clear(); //clear out grid before printing
     setup();
     noStroke();
     fill('rgb(0,255,0)');  //Fill color of text
     textSize(15);
-    //clear out grid before printing
     
     for (character in user_plaintxt)//displays character into respective cell
     { 
@@ -253,4 +342,13 @@ function displayText(user_plaintxt)
     }
 
 }
+
+function displayCypher(user_encryptedMsg)
+{
+    for (character in user_encryptedMsg)
+    {
+        text(user_encryptedMsg[character], (8+(character*25)), 42);
+    }
+}
+
 //------------------------------------------------------------------------------------------------------------------------

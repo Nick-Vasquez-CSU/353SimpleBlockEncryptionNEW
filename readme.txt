@@ -1,22 +1,36 @@
 Readme for js-p5-example
 Time-stamp: <2020-09-02 14:11:19 Chuck Siska>
 ------------------------------------------------------------
+Class Number:  
 
-Intro
+      CPSC 353-05
 
-  This example draws a grid and runs an invisible bot from cell to cell
-  on the grid changing its colors.  You can stop/restart the bot with
-  any keypress.  You can move the bot to any cell with a mouse-click.
+Project: 
 
-  This is an example project using HTML, Javascript (JS), and P5.js
-  which is a JS-adapted version of the Processing Language.  CF HTML and
-  JS on the web (eg, Wikipedia).  More on P5 is at
-  p5js.org/reference.and at github.com/processing/p5.js/wiki.
+      #1 Simple Block Encryption
 
-  P5 provides sutomated animation (via a user-built "draw" function),
-  and GUI manipulation functions that are simpler than JS.
+Team: 
 
-Zip Contents
+      3NB
+      Nicolas Vasquez, Nathan Vu, Bryant Nguyen, Nicholas Jones
+
+Intro:
+
+      This project takes two string inputs from the user in order to encrypt them.
+      You can press the submit button to have the encryption process start; you will
+      see the plaintext message displayed on the top grid and the encrypted message
+      in the bottom grid. The encryption algorithm used was the ECB mechanism. 
+      The website includes instructions on how to format the plaintext message and password.
+
+      This is an example project using HTML, Javascript (JS), and P5.js
+      which is a JS-adapted version of the Processing Language.  CF HTML and
+      JS on the web (eg, Wikipedia).  More on P5 is at
+      p5js.org/reference.and at github.com/processing/p5.js/wiki.
+
+      P5 provides sutomated animation (via a user-built "draw" function),
+      and GUI manipulation functions that are simpler than JS.
+
+Zip Contents:
 
   File readme.txt.  This file.
 
@@ -33,9 +47,10 @@ Zip Contents
   File p5.js. This is the P5 package.  It is loaded inside the html.
 
   File cs-sketch.js; This contains several P5 user-defined linkage functions
-   (setup, draw, keyPressed, and mousePressed), as well as example
-    support functions.  P5's setup() is run once before page display.
-    P5's draw() is run once per display frame, so you can do animation.
+    (setup, draw, keyPressed, and mousePressed), as well as example
+    support functions. P5's setup() is run once before page display.
+    P5's text() is run twice to display both the plaintext message and the
+    encrypted message.
 
   File assets/styles.css.  This is an extra-small example of controlling
     webpage styling.  // Loaded inside the html.
@@ -45,7 +60,7 @@ Zip Contents
     folder location.  It also includes the utility draw_grid function
     written in P5+JS. // Loaded inside the html.
 
-Installation & Running
+Installation & Running:
 
   1. Extract the .zip file into a folder.
 
@@ -55,26 +70,24 @@ Installation & Running
     row/column headers and some of the grid cells colored.  See the
     picture pix-js-p5-example-1.JPG.
 
-Known Bugs
+Known Bugs:
 
-  o- Bot cell drawing over-writes a pixels-worth of the cell's grid lines.
+    None
 
 Warnings
 
-  o- Clicking outside the grid wraps the mouse x.y back into the grid --
-     maybe at a weird-looking spot.  Enjoy.
-
-  o- Testing was light.  Didn't try all key or mouse combos.
+    If plaintext or password input are not in the format that the  
+    instructions lay out, the encryption will not begin
 
 Testing
 
-  o- Following installation instruction, above, watched it run, and
-  tryed a few keypresses and mouse clicks.  Looks okay to ship.
+    Following installation instruction, above, watched it run, and
+    tryed a few different plaintext and password combinations.  Looks okay to ship.
 
 Credits
 
-  Some code was borrowed and modified from Stuart's book.  
+    Some code was borrowed and modified from Stuart's book.  
     Introducing JavaScript Game Development: Build a 2D Game from the
     Ground Up, by Graeme Stuart, 2018, 209 pages.
 
-  And, of course, thanks to the HTML and P5.js developers.
+    And, of course, thanks to the HTML and P5.js developers.
